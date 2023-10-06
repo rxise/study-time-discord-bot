@@ -3,7 +3,11 @@ const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
+const client = new Client({ intents: [
+	GatewayIntentBits.Guilds, 
+	GatewayIntentBits.GuildMembers, 
+	GatewayIntentBits.GuildVoiceStates
+] });
 
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
@@ -26,6 +30,17 @@ for (const folder of commandFolders) {
 client.once(Events.ClientReady, () => {
 	console.log('Ready!');
 });
+
+
+client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
+	if(newState.channelId == null)
+	console.log(`User has left the channel: ${oldState.channelId}`);
+	else if(oldState.channelId == null)
+	console.log(`User has joined the channel: ${newState.channelId}`);
+	else {
+		console.log(`User has moved from channel ${oldState.channelId} to ${newState.channelId}`);
+	}
+})
 
 client.on(Events.InteractionCreate, async interaction => {
 
