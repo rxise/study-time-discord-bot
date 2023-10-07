@@ -40,6 +40,12 @@ client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
 	else {
 		console.log(`User has moved from channel ${oldState.channelId} to ${newState.channelId}`);
 	}
+	
+	const channel = newState.guild.channels.cache.get('1150509368631119904'); // Replace with your text channel ID
+    if (channel) {
+      channel.send(`User has joined the voice channel: <@${newState.member.user.id}>`);
+    }
+
 })
 
 client.on(Events.InteractionCreate, async interaction => {
